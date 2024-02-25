@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 
 import backendk24.bookstore.domain.Book;
 import backendk24.bookstore.domain.BookRepository;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 public class BookstoreApplication {
