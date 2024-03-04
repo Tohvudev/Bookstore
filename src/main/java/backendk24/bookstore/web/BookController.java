@@ -1,6 +1,8 @@
 package backendk24.bookstore.web;
 
 import backendk24.bookstore.domain.Book;
+import backendk24.bookstore.domain.Category;
+import backendk24.bookstore.domain.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,9 @@ import backendk24.bookstore.web.BookController;
 
 @Controller
 public class BookController {
+
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @Autowired
     BookRepository bookRepository;
@@ -46,6 +51,22 @@ public class BookController {
     public String showModBook(@PathVariable("id") Long bookId, Model model) {
         model.addAttribute(("book"), bookRepository.findById(bookId));
         return "editbook";
+    }
+
+    @RequestMapping(value = "categorylist", method = RequestMethod.GET)
+    public String listCategories(Model model) {
+        model.addAttribute("categories", categoryRepository.findAll());
+        return "categorylist";
+    }
+    @RequestMapping(value = "/addcategory")
+    public String addCategory(Model model) {
+        model.addAttribute("category", new Category());
+        return ("addcategory");
+    }
+    @RequestMapping(value = "/savecategory", method = RequestMethod.POST)
+    public String saveCategory(Category category) {
+        categoryRepository.save(category);
+        return "redirect:categorylist";
     }
 
 }
