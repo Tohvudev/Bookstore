@@ -1,24 +1,25 @@
 package backendk24.bookstore.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long categoryId;
     private String name;
 
+    @OneToMany(mappedBy = "category")
+    private List<Book> books;
+
     public Category() {
-        super();
-        this.name = null;
+
     }
 
     public Category(String name) {
-        super();
         this.name = name;
     }
 
@@ -38,9 +39,17 @@ public class Category {
         this.name = name;
     }
 
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+
     @Override
     public String toString() {
         return "Category [categoryId=" + categoryId + ", name=" + name + "]";
     }
-
 }

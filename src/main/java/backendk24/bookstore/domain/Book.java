@@ -1,10 +1,6 @@
 package backendk24.bookstore.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Book {
@@ -19,8 +15,11 @@ public class Book {
     private String isbn;
     private double price;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     public Book(String title, String author, int year, String isbn, double price) {
-        super();
         this.title = title;
         this.author = author;
         this.year = year;
@@ -29,12 +28,6 @@ public class Book {
     }
 
     public Book() {
-        super();
-        this.title = null;
-        this.author = null;
-        this.year = 0;
-        this.isbn = null;
-        this.price = 0;
 
     }
 
@@ -86,10 +79,16 @@ public class Book {
         this.price = price;
     }
 
-    @Override
-    public String toString() {
-        return "Book [title=" + title + ", author=" + author + ", year=" + year + ", isbn=" + isbn + ", price=" + price
-                + "]";
+    public Category getCategory() {
+        return category;
     }
 
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    @Override
+    public String toString() {
+        return "Book [title=" + title + ", author=" + author + ", year=" + year + ", isbn=" + isbn + ", price=" + price + "]";
+    }
 }
