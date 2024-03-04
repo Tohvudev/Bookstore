@@ -6,9 +6,7 @@ import backendk24.bookstore.domain.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import backendk24.bookstore.domain.BookRepository;
 import backendk24.bookstore.web.BookController;
 
@@ -32,14 +30,25 @@ public class BookController {
     @RequestMapping(value = "/add")
     public String addBook(Model model) {
         model.addAttribute("book", new Book());
-        return ("addbook");
-    };
+        model.addAttribute("categories", categoryRepository.findAll()); // Add categories to the model
+        return "addbook";
+    }
+
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(Book book) {
+    public String save(@ModelAttribute("book") Book book, @RequestParam("category.id") Long categoryId) {
+
+        Category selectedCategory = categoryRepository.findById(categoryId).orElseThrow();
+
+        book.setCategory(selectedCategory);
+        
         bookRepository.save(book);
+
         return "redirect:booklist";
     }
+
+
+
 
     @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
     public String deleteBook(@PathVariable("id") Long bookId, Model model) {
