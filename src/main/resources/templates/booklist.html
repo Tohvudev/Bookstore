@@ -1,38 +1,97 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <head>
   <title>Book list</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+  <style>
+    .book-container {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .logout-btn {
+      float: right;
+      margin-top: 10px;
+    }
+
+    .greeting {
+      text-align: center;
+      margin-top: -30px;
+    }
+
+    .books-header {
+      margin-left: 20px;
+    }
+  </style>
 </head>
 
 <body>
-<h1>Books</h1>
-<div id="container">
-  <table>
-    <tr>
-      <th>Author</th>
-      <th>Title</th>
-      <th>ISBN</th>
-      <th>Year</th>
-      <th>Price</th>
-      <th>Category</th>
-    </tr>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="books-header">Books</h1>
+    </div>
+  </div>
 
-    <tr th:each="book : ${books}">
-      <td th:text="${book.author}">Author</td>
-      <td th:text="${book.title}">Title</td>
-      <td th:text="${book.isbn}">ISBN</td>
-      <td th:text="${book.year}">Year</td>
-      <td th:text="${book.price}">Price</td>
-      <td th:text="${book.category != null ? book.category.name : ''}">Category</td>
-      <td><a th:href="@{/edit/{id}(id=${book.id})}" class="btn btn-danger">Edit</a></td>
-      <td><a th:href="@{/delete/{id}(id=${book.id})}" class="btn btn-danger">Delete</a></td>
-    </tr>
-  </table>
-  <a href="/add" class="btn btn-success">Add Book</a>
+  <div class="row">
+    <div class="col-md-12">
+
+      <h2 class="greeting" th:text="'Hello ' + ${#authentication.name}"></h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <form th:action="@{/logout}" method="post" class="logout-btn">
+        <input type="submit" value="Sign Out" class="btn btn-sm btn-danger" />
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="book-container">
+        <table class="table">
+          <thead>
+          <tr>
+            <th>Author</th>
+            <th>Title</th>
+            <th>ISBN</th>
+            <th>Year</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody>
+
+          <tr th:each="book : ${books}">
+            <td th:text="${book.author}">Author</td>
+            <td th:text="${book.title}">Title</td>
+            <td th:text="${book.isbn}">ISBN</td>
+            <td th:text="${book.year}">Year</td>
+            <td th:text="${book.price}">Price</td>
+            <td th:text="${book.category != null ? book.category.name : ''}">Category</td>
+            <td sec:authorize="hasRole('ADMIN')">
+              <a th:href="@{/edit/{id}(id=${book.id})}" class="btn btn-danger">Edit</a>
+              <a th:href="@{/delete/{id}(id=${book.id})}" class="btn btn-danger">Delete</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <a href="/add" class="btn btn-success">Add Book</a>
+    </div>
+  </div>
 </div>
+
 </body>
 
 </html>
